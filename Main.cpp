@@ -6,34 +6,35 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "Player.h"
 
 using namespace std;
 
+typedef struct ${
+	int pos_x;    	
+	int pos_y;
+	bool active;   	
+}Boll;
+
 int main(){
 	// Definindos as contantes;
-	const int DISPLAY_WIDTH = 451;
-	const int DISPLAY_HEIGHT = 249;
+	const int DISPLAY_WIDTH = 600;
+	const int DISPLAY_HEIGHT = 300;
 
 	// Criando as variáveis do jogo
 	bool isRunning = true;
-	bool boca_aberta = false;
+	int boca_aberta = 0;
+	bool big_boll_white = false;
     int count = 0;
+    int count2 = 0;
 	// Criando as Variáveis do Player
-	int player_pos_x = 20;
-	int player_pos_y = 20;
-	int player_speed = 1;
-	bool player_move_up = false;
-	bool player_move_down = false;
-	bool player_move_left = false;
-	bool player_move_right = false;
-	ALLEGRO_BITMAP *player_side_in_move = NULL;
-	ALLEGRO_BITMAP *player_side_up = NULL;
-	ALLEGRO_BITMAP *player_side_down = NULL;
-	ALLEGRO_BITMAP *player_side_left = NULL;
-	ALLEGRO_BITMAP *player_side_rigth = NULL;
+	Player* player = new Player();
 
 	// Criando os objetos
 	ALLEGRO_BITMAP *background = NULL;
+	ALLEGRO_BITMAP *img_small_boll = NULL;
+	ALLEGRO_BITMAP *img_big_boll_white = NULL;
+	ALLEGRO_BITMAP *img_big_boll_yellow = NULL;
 	ALLEGRO_DISPLAY *display = NULL;
 	ALLEGRO_EVENT_QUEUE *queue_event = NULL;
 
@@ -58,34 +59,51 @@ int main(){
 
 	// Carregando as imagens do JOGO
 	background = al_load_bitmap("./images/fundo.png");
+	img_small_boll = al_load_bitmap("./images/small_boll.png");
+	img_big_boll_white = al_load_bitmap("./images/big_boll_white.png");
+	img_big_boll_yellow = al_load_bitmap("./images/big_boll_yellow.png");
 
     //Carregando as imagens do personagem
-    player_side_up = al_load_bitmap("./images/pac_man_up.png");
-    player_side_down = al_load_bitmap("./images/pac_man_down.png");
-    player_side_left = al_load_bitmap("./images/pac_man_left.png");
-    player_side_rigth = al_load_bitmap("./images/pac_man_rigth.png");
-    player_side_in_move = al_load_bitmap("./images/pac_man_boca_fechada.png");
+    player->upload_images();
 
-	// Criando a Matriz do jogo
-	unsigned char game_map[DISPLAY_WIDTH][DISPLAY_HEIGHT];
-	int i,j;
+    // Inicia a bolinhas
+    Boll small_boll[96];
+    Boll big_boll[4];
+    
+    // Criando a Matriz do jogo
+	int i,j,k=0,l=0;
+	unsigned char game_map[443][245];
 	//unsigned char r;
 	//unsigned char g;
 	//unsigned char b;
 	FILE *in = fopen("game_map.txt","r");
-	for(i=0;i<DISPLAY_WIDTH;i++){
-		for(j=0;j<DISPLAY_HEIGHT;j++){
-			//al_unmap_rgb(al_get_pixel(background,i,j), &r, &g, &b);
-			//if(r+g+b == 0){
-				//game_map[i][j] = fgetc(in);
-				//fprintf(out, "%i",0);
-			//}else{	
-				game_map[i][j] = fgetc(in) - 48;
-				//fprintf(out, "%i",1);
-			//}
+	for(i=0;i<443;i++){
+		for(j=0;j<245;j++){
+			game_map[i][j] = fgetc(in) - 48;
+			if(game_map[i][j]==2){
+				small_boll[k].pos_x = i;
+				small_boll[k].pos_y = j;
+				small_boll[k].active = true;
+				k++;
+			}else if(game_map[i][j]==3){
+				big_boll[l].pos_x = i;
+				big_boll[l].pos_y = j;
+				big_boll[l].active = true;
+				l++;
+			}
+			/*al_unmap_rgb(al_get_pixel(background,i,j), &r, &g, &b);
+			if(r+g+b == 0){
+				fprintf(out, "%i",0);
+			}else if(r == 255){	
+				fprintf(out, "%i",2);
+			}else if(b == 255){	
+				fprintf(out, "%i",3);
+				cout << "yeap" << endl;
+			}else{
+				fprintf(out, "%i",1);
+			}*/
 		}
 	}
-
 	// Criação da Fila de Eventos
 	queue_event = al_create_event_queue();
 
@@ -95,6 +113,7 @@ int main(){
 
 	// Inicia o Background e os atores
 	al_draw_bitmap(background, 0, 0, 0);
+	cout << "chaega aqui" << endl;
 
 	// Laço insfinito para atualização da tela
 	while(isRunning){
@@ -105,28 +124,28 @@ int main(){
 			if(event.type == ALLEGRO_EVENT_KEY_DOWN){
 				switch(event.keyboard.keycode){
 					case ALLEGRO_KEY_UP:
-						player_move_up = true;
-						player_move_down = false;
-						player_move_left = false;
-						player_move_right = false;
+						player->setMove_up(true);
+						player->setMove_down(false);
+						player->setMove_left(false);
+						player->setMove_right(false);
 						break;
 					case ALLEGRO_KEY_DOWN:
-						player_move_up = false;
-						player_move_down = true;
-						player_move_left = false;
-						player_move_right = false;
+						player->setMove_up(false);
+						player->setMove_down(true);
+						player->setMove_left(false);
+						player->setMove_right(false);
 						break;
 					case ALLEGRO_KEY_LEFT:
-						player_move_up = false;
-						player_move_down = false;
-						player_move_left = true;
-						player_move_right = false;
+						player->setMove_up(false);
+						player->setMove_down(false);
+						player->setMove_left(true);
+						player->setMove_right(false);
 						break;
 					case ALLEGRO_KEY_RIGHT:
-						player_move_up = false;
-						player_move_down = false;
-						player_move_left = false;
-						player_move_right = true;
+						player->setMove_up(false);
+						player->setMove_down(false);
+						player->setMove_left(false);
+						player->setMove_right(true);
 						break;
 					case ALLEGRO_KEY_ESCAPE:
 						isRunning = false;
@@ -139,79 +158,110 @@ int main(){
 				isRunning = false;
 			}
 		}
+        //Verifica se tem parede na pra cima em 4 pontos diferentes espalhados pela parte de cima do player
+		if(player->getMove_up()){
+			if( game_map[player->getPos_x()][player->getPos_y()-1] == 1 ||
+				game_map[player->getPos_x()+35][player->getPos_y()-1] == 1){
+				count--;
+			}else{
+				player->walk_up();
+			}
+		}
+        //Verifica se tem parede na pra biaxo em 4 pontos diferentes espalhados pela parte de baixo do player
+		if(player->getMove_down()){
+			if( game_map[player->getPos_x()][player->getPos_y()+36] == 1 ||
+				game_map[player->getPos_x()+35][player->getPos_y()+36] == 1){
+				count--;
+			}else{
+				player->walk_down();
+			}
+		}
+        //Verifica se tem parede na pra esquerda em 4 pontos diferentes espalhados pela parte de esquerda do player
+		if(player->getMove_left()){
+			if( game_map[player->getPos_x()-1][player->getPos_y()] == 1 || 
+				game_map[player->getPos_x()-1][player->getPos_y()+35] == 1){
+				count--;
+			}else{
+				player->walk_left();
+			}
+		}
+        //Verifica se tem parede na pra direita em 4 pontos diferentes espalhados pela parte de direita do player
+		if(player->getMove_right()){
+			if( game_map[player->getPos_x()+36][player->getPos_y()] == 1 ||
+				game_map[player->getPos_x()+36][player->getPos_y()+35] == 1){
+				count--;
+			}else{
+				player->walk_right();
+			}
+		}
 		if(count == 10){
-            boca_aberta = !boca_aberta;
+            boca_aberta++;
+            if(boca_aberta == 3){
+            	boca_aberta = 0;
+            }
             count = 0;
         }else{
             count++;
         }
-		if(player_move_up){
-			if(game_map[player_pos_x][player_pos_y-1] + game_map[player_pos_x+7][player_pos_y-1] + game_map[player_pos_x+14][player_pos_y-1] + game_map[player_pos_x+21][player_pos_y-1] == 0){
-				player_pos_y -= player_speed;
-			}else{
-				count--;
-			}
-		}
-		if(player_move_down){
-			if(game_map[player_pos_x][player_pos_y+22] + game_map[player_pos_x+7][player_pos_y+22] + game_map[player_pos_x+14][player_pos_y+22] + game_map[player_pos_x+21][player_pos_y+22] == 0){
-				player_pos_y += player_speed;
-			}else{
-				count--;
-			}
-		}
-		if(player_move_left){
-			if(game_map[player_pos_x-1][player_pos_y] + game_map[player_pos_x-1][player_pos_y+7] + game_map[player_pos_x-1][player_pos_y+14] + game_map[player_pos_x-1][player_pos_y+21] == 0){
-				player_pos_x -= player_speed;
-			}else{
-				count--;
-			}
-		}
-		if(player_move_right){
-			if(game_map[player_pos_x+22][player_pos_y] + game_map[player_pos_x+22][player_pos_y+7] + game_map[player_pos_x+22][player_pos_y+14] + game_map[player_pos_x+22][player_pos_y+21] == 0){
-				player_pos_x += player_speed;
-			}else{
-				count--;
-			}
-		}
-		//Lógica de atualização e movimento
 		
-		if(boca_aberta){
-			if(player_move_up){
+		// Coloca a imagem adequada para dar a impressão de movimento
+		if(boca_aberta==1){
+			if(player->getMove_up()){
 				al_draw_bitmap(background, 0, 0, 0);
-	            al_draw_bitmap(player_side_up, player_pos_x, player_pos_y, 0);
-	            al_draw_bitmap(player_side_down, -50, -50, 0);
-	            al_draw_bitmap(player_side_left, -50, -50, 0);
-	            al_draw_bitmap(player_side_rigth, -50, -50, 0);
-	            al_draw_bitmap(player_side_in_move, -50, -50, 0);
-	        }else if(player_move_down){
+	            al_draw_bitmap(player->side_up, player->getPos_x(), player->getPos_y(), 0);
+	        }else if(player->getMove_down()){
 	        	al_draw_bitmap(background, 0, 0, 0);
-	            al_draw_bitmap(player_side_up, -50, -50, 0);
-	            al_draw_bitmap(player_side_down, player_pos_x, player_pos_y, 0);
-	            al_draw_bitmap(player_side_left, -50, -50, 0);
-	            al_draw_bitmap(player_side_rigth, -50, -50, 0);
-	            al_draw_bitmap(player_side_in_move, -50, -50, 0);
-	        }else if(player_move_left){
+	            al_draw_bitmap(player->side_down, player->getPos_x(), player->getPos_y(), 0);
+	        }else if(player->getMove_left()){
 	        	al_draw_bitmap(background, 0, 0, 0);
-	            al_draw_bitmap(player_side_up, -50, -50, 0);
-	            al_draw_bitmap(player_side_down, -50, -50, 0);
-	            al_draw_bitmap(player_side_left, player_pos_x, player_pos_y, 0);
-	            al_draw_bitmap(player_side_rigth, -50, -50, 0);
-	            al_draw_bitmap(player_side_in_move, -50, -50, 0);
-	        }else if(player_move_right){
+	            al_draw_bitmap(player->side_left, player->getPos_x(), player->getPos_y(), 0);
+	        }else if(player->getMove_right()){
 	        	al_draw_bitmap(background, 0, 0, 0);
-	            al_draw_bitmap(player_side_up, -50, -50, 0);
-	            al_draw_bitmap(player_side_down, -50, -50, 0);
-	            al_draw_bitmap(player_side_left, -50, -50, 0);
-	            al_draw_bitmap(player_side_rigth, player_pos_x, player_pos_y, 0);
-	            al_draw_bitmap(player_side_in_move, -50, -50, 0);
+	            al_draw_bitmap(player->side_rigth, player->getPos_x(), player->getPos_y(), 0);
+	        }
+	    }else if(boca_aberta==2){
+			if(player->getMove_up()){
+				al_draw_bitmap(background, 0, 0, 0);
+	            al_draw_bitmap(player->side_up_half, player->getPos_x(), player->getPos_y(), 0);
+	        }else if(player->getMove_down()){
+	        	al_draw_bitmap(background, 0, 0, 0);
+	            al_draw_bitmap(player->side_down_half, player->getPos_x(), player->getPos_y(), 0);
+	        }else if(player->getMove_left()){
+	        	al_draw_bitmap(background, 0, 0, 0);
+	            al_draw_bitmap(player->side_left_half, player->getPos_x(), player->getPos_y(), 0);
+	        }else if(player->getMove_right()){
+	        	al_draw_bitmap(background, 0, 0, 0);
+	            al_draw_bitmap(player->side_rigth_half, player->getPos_x(), player->getPos_y(), 0);
 	        }
 	    }else{
 	    	al_draw_bitmap(background, 0, 0, 0);
-        	al_draw_bitmap(player_side_up, -50, -50, 0);
-            al_draw_bitmap(player_side_down, -50, -50, 0);
-            al_draw_bitmap(player_side_left, -50, -50, 0);
-            al_draw_bitmap(player_side_rigth, -50, -50, 0);
-            al_draw_bitmap(player_side_in_move, player_pos_x, player_pos_y, 0);
+            al_draw_bitmap(player->side_in_move, player->getPos_x(), player->getPos_y(), 0);
+        }
+        //Coocando as bolinhas
+        if(count2 == 5){
+            big_boll_white = !big_boll_white;
+            count2 = 0;
+        }else{
+            count2++;
+        }
+        for(i=0;i<96;i++){
+        	if(small_boll[i].active){
+        		al_draw_bitmap(img_small_boll, small_boll[i].pos_x-2, small_boll[i].pos_y-2, 0);
+        	}
+
+        }
+        if(big_boll_white){
+	        for(i=0;i<4;i++){
+	        	if(big_boll[i].active){
+		        	al_draw_bitmap(img_big_boll_white, big_boll[i].pos_x-5, big_boll[i].pos_y-5, 0);
+	        	}
+	        }
+        }else{
+        	for(i=0;i<4;i++){
+	        	if(big_boll[i].active){
+		        	al_draw_bitmap(img_big_boll_yellow, big_boll[i].pos_x-5, big_boll[i].pos_y-5, 0);
+	        	}
+	        }
         }
 		al_flip_display();
 	}
