@@ -3,9 +3,9 @@ Jogo PAC-MAN com a biblioteca Allegro 5.0 do C++.
 
 ## Compilação
 
-´´´sh
+```sh
 $ g++ Main.cpp Player.cpp Monster.cpp -o exe -lallegro -lallegro_primitives -lallegro_ttf -lallegro_font -lallegro_image -lallegro_dialog -lallegro_acodec -lallegro_audio
-´´´
+```
 
 ## Classes
 Descrição das calsses utilizadas
