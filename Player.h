@@ -13,15 +13,22 @@ private:
 	bool move_left;
 	bool move_right;
 public:
-	ALLEGRO_BITMAP *side_in_move;
-	ALLEGRO_BITMAP *side_up;
-	ALLEGRO_BITMAP *side_up_half;
-	ALLEGRO_BITMAP *side_down;
-	ALLEGRO_BITMAP *side_down_half;
-	ALLEGRO_BITMAP *side_left;
-	ALLEGRO_BITMAP *side_left_half;
-	ALLEGRO_BITMAP *side_rigth;
-	ALLEGRO_BITMAP *side_rigth_half;
+	//UP
+	ALLEGRO_BITMAP *side_up_one;
+	ALLEGRO_BITMAP *side_up_two;
+	ALLEGRO_BITMAP *side_up_tree;
+	//DOWN
+	ALLEGRO_BITMAP *side_down_one;
+	ALLEGRO_BITMAP *side_down_two;
+	ALLEGRO_BITMAP *side_down_tree;
+	//LEFT
+	ALLEGRO_BITMAP *side_left_one;
+	ALLEGRO_BITMAP *side_left_two;
+	ALLEGRO_BITMAP *side_left_tree;
+	//RIGHT
+	ALLEGRO_BITMAP *side_right_one;
+	ALLEGRO_BITMAP *side_right_two;
+	ALLEGRO_BITMAP *side_right_tree;
 	Player();
 	// Decalração dos Sets
 	void setPos_x(int pos_x);
@@ -45,12 +52,12 @@ public:
 	bool getMove_left();
 	bool getMove_right();
 	// Funções de andar
-	int walk_up(int mov_anterior, unsigned char game_map[441][234]);
-	int walk_down(int mov_anterior, unsigned char game_map[441][234]);
-	int walk_left(int mov_anterior, unsigned char game_map[441][234]);
-	int walk_right(int mov_anterior, unsigned char game_map[441][234]);
+	int walk_up(int mov_anterior, unsigned char **game_map);
+	int walk_down(int mov_anterior, unsigned char **game_map);
+	int walk_left(int mov_anterior, unsigned char **game_map);
+	int walk_right(int mov_anterior, unsigned char **game_map);
 	// C
 	void upload_images();
 	void show(int boca_aberta, int mov_atual);
-	int define_move(int mov_atual, unsigned char game_map[441][234]);
+	int define_move(int mov_atual, unsigned char **game_map);
 };

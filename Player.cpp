@@ -6,15 +6,22 @@ Player::Player(){
 	this->speed = 1;
 	this->lifes = 3;
 	this->point = 0;
-	this->move_up = false;
-	this->move_down = false;
-	this->move_left = false;
-	this->move_right = false;
-	this->side_in_move = NULL;
-	this->side_up = NULL;
-	this->side_down = NULL;
-	this->side_left = NULL;
-	this->side_rigth = NULL;
+	//UP
+	this->side_up_one = NULL;
+	this->side_up_two = NULL;
+	this->side_up_tree = NULL;
+	//DOWN
+	this->side_down_one = NULL;
+	this->side_down_two = NULL;
+	this->side_down_tree = NULL;
+	//LEFT
+	this->side_left_one = NULL;
+	this->side_left_two = NULL;
+	this->side_left_tree = NULL;
+	//RIGHT
+	this->side_right_one = NULL;
+	this->side_right_two = NULL;
+	this->side_right_tree = NULL;
 }
 // Decalração dos Sets
 void Player::setPos_x(int pos_x){
@@ -73,7 +80,7 @@ bool Player::getMove_right(){
 	return this->move_right;
 }
 // Funções de andar
-int Player::walk_up(int mov_anterior, unsigned char game_map[441][234]){
+int Player::walk_up(int mov_anterior, unsigned char **game_map){
 	if( game_map[this->getPos_x()][this->getPos_y()-1] == 1 ||
 		game_map[this->getPos_x()+22][this->getPos_y()-1] == 1){
 		if(mov_anterior==2){
@@ -91,7 +98,7 @@ int Player::walk_up(int mov_anterior, unsigned char game_map[441][234]){
 	}
 	return mov_anterior;
 }
-int Player::walk_down(int mov_anterior, unsigned char game_map[441][234]){
+int Player::walk_down(int mov_anterior, unsigned char **game_map){
 	if( game_map[this->getPos_x()][this->getPos_y()+23] == 1 ||
 		game_map[this->getPos_x()+22][this->getPos_y()+23] == 1){
 		if(mov_anterior==1){
@@ -109,7 +116,7 @@ int Player::walk_down(int mov_anterior, unsigned char game_map[441][234]){
 	}
 	return mov_anterior;
 }
-int Player::walk_left(int mov_anterior, unsigned char game_map[441][234]){
+int Player::walk_left(int mov_anterior, unsigned char **game_map){
 	if( game_map[this->getPos_x()-1][this->getPos_y()] == 1 || 
 		game_map[this->getPos_x()-1][this->getPos_y()+22] == 1){
 		if(mov_anterior==1){
@@ -127,7 +134,7 @@ int Player::walk_left(int mov_anterior, unsigned char game_map[441][234]){
 	}
 	return mov_anterior;
 }
-int Player::walk_right(int mov_anterior, unsigned char game_map[441][234]){
+int Player::walk_right(int mov_anterior, unsigned char **game_map){
 	if( game_map[this->getPos_x()+23][this->getPos_y()] == 1 ||
 		game_map[this->getPos_x()+23][this->getPos_y()+22] == 1){
 		if(mov_anterior==1){
@@ -147,60 +154,74 @@ int Player::walk_right(int mov_anterior, unsigned char game_map[441][234]){
 }
 // Carregar as imagens do plesonagem
 void Player::upload_images(){
-    this->side_in_move = al_load_bitmap("./images/player/pac_man_boca_fechada.png");
-	this->side_up = al_load_bitmap("./images/player/pac_man_up.png");
-	this->side_up_half = al_load_bitmap("./images/player/pac_man_up_half.png");
-    this->side_down = al_load_bitmap("./images/player/pac_man_down.png");
-    this->side_down_half = al_load_bitmap("./images/player/pac_man_down_half.png");
-    this->side_left = al_load_bitmap("./images/player/pac_man_left.png");
-    this->side_left_half = al_load_bitmap("./images/player/pac_man_left_half.png");
-    this->side_rigth = al_load_bitmap("./images/player/pac_man_rigth.png");
-    this->side_rigth_half = al_load_bitmap("./images/player/pac_man_rigth_half.png");
+	//UP
+    this->side_up_one = al_load_bitmap("./images/player/up_one.png");
+    this->side_up_two = al_load_bitmap("./images/player/up_two.png");
+    this->side_up_tree = al_load_bitmap("./images/player/up_tree.png");
+    //DOWN
+    this->side_down_one = al_load_bitmap("./images/player/down_one.png");
+    this->side_down_two = al_load_bitmap("./images/player/down_two.png");
+    this->side_down_tree = al_load_bitmap("./images/player/down_tree.png");
+    //LEFT
+    this->side_left_one = al_load_bitmap("./images/player/left_one.png");
+    this->side_left_two = al_load_bitmap("./images/player/left_two.png");
+    this->side_left_tree = al_load_bitmap("./images/player/left_tree.png");
+    //RIGHT
+    this->side_right_one = al_load_bitmap("./images/player/right_one.png");
+    this->side_right_two = al_load_bitmap("./images/player/right_two.png");
+    this->side_right_tree = al_load_bitmap("./images/player/right_tree.png");
 }
 void Player::position(int pos_x, int pos_y){
 	this->pos_x = pos_x;
 	this->pos_y = pos_y;
 }
 
-void Player::show(int boca_aberta, int mov_atual){
-	if(boca_aberta==1){
+void Player::show(int sprit, int mov_atual){
+	if(sprit==1){
 		if(mov_atual==1){
 			//al_draw_bitmap(background, 0, 0, 0);
-            al_draw_bitmap(this->side_up, this->getPos_x(), this->getPos_y(), 0);
+            al_draw_bitmap(this->side_up_one, this->getPos_x()-6, this->getPos_y()-6, 0);
         }else if(mov_atual==2){
         	//al_draw_bitmap(background, 0, 0, 0);
-            al_draw_bitmap(this->side_down, this->getPos_x(), this->getPos_y(), 0);
+            al_draw_bitmap(this->side_down_one, this->getPos_x()-6, this->getPos_y()-6, 0);
         }else if(mov_atual==3){
         	//al_draw_bitmap(background, 0, 0, 0);
-            al_draw_bitmap(this->side_left, this->getPos_x(), this->getPos_y(), 0);
+            al_draw_bitmap(this->side_left_one, this->getPos_x()-6, this->getPos_y()-6, 0);
         }else if(mov_atual==4){
         	//al_draw_bitmap(background, 0, 0, 0);
-            al_draw_bitmap(this->side_rigth, this->getPos_x(), this->getPos_y(), 0);
-        }else{
-        	al_draw_bitmap(this->side_in_move, this->getPos_x(), this->getPos_y(), 0);
+            al_draw_bitmap(this->side_right_one, this->getPos_x()-6, this->getPos_y()-6, 0);
         }
-    }else if(boca_aberta==2 || boca_aberta==4){
+    }else if(sprit==2 || sprit==4){
 		if(mov_atual==1){
 			//al_draw_bitmap(background, 0, 0, 0);
-            al_draw_bitmap(this->side_up_half, this->getPos_x(), this->getPos_y(), 0);
+            al_draw_bitmap(this->side_up_two, this->getPos_x()-6, this->getPos_y()-6, 0);
         }else if(mov_atual==2){
         	//al_draw_bitmap(background, 0, 0, 0);
-            al_draw_bitmap(this->side_down_half, this->getPos_x(), this->getPos_y(), 0);
+            al_draw_bitmap(this->side_down_two, this->getPos_x()-6, this->getPos_y()-6, 0);
         }else if(mov_atual==3){
         	//al_draw_bitmap(background, 0, 0, 0);
-            al_draw_bitmap(this->side_left_half, this->getPos_x(), this->getPos_y(), 0);
+            al_draw_bitmap(this->side_left_two, this->getPos_x()-6, this->getPos_y()-6, 0);
         }else if(mov_atual==4){
         	//al_draw_bitmap(background, 0, 0, 0);
-            al_draw_bitmap(this->side_rigth_half, this->getPos_x(), this->getPos_y(), 0);
-        }else{
-        	al_draw_bitmap(this->side_in_move, this->getPos_x(), this->getPos_y(), 0);
+            al_draw_bitmap(this->side_right_two, this->getPos_x()-6, this->getPos_y()-6, 0);
         }
     }else{
-    	//al_draw_bitmap(background, 0, 0, 0);
-        al_draw_bitmap(this->side_in_move, this->getPos_x(), this->getPos_y(), 0);
+    	if(mov_atual==1){
+			//al_draw_bitmap(background, 0, 0, 0);
+            al_draw_bitmap(this->side_up_tree, this->getPos_x()-6, this->getPos_y()-6, 0);
+        }else if(mov_atual==2){
+        	//al_draw_bitmap(background, 0, 0, 0);
+            al_draw_bitmap(this->side_down_tree, this->getPos_x()-6, this->getPos_y()-6, 0);
+        }else if(mov_atual==3){
+        	//al_draw_bitmap(background, 0, 0, 0);
+            al_draw_bitmap(this->side_left_tree, this->getPos_x()-6, this->getPos_y()-6, 0);
+        }else if(mov_atual==4){
+        	//al_draw_bitmap(background, 0, 0, 0);
+            al_draw_bitmap(this->side_right_tree, this->getPos_x()-6, this->getPos_y()-6, 0);
+        }
     }
 }
-int Player::define_move(int mov_atual, unsigned char game_map[441][234]){
+int Player::define_move(int mov_atual, unsigned char **game_map){
 	if(this->getMove_up()){
 		mov_atual = this->walk_up(mov_atual, game_map);
 	}

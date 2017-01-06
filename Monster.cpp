@@ -14,8 +14,8 @@ Monster::Monster(int pos_x, int pos_y){
 	this->side_down_two = NULL;
 	this->side_left_one = NULL;
 	this->side_left_two = NULL;
-	this->side_rigth_one = NULL;
-	this->side_rigth_two = NULL;
+	this->side_right_one = NULL;
+	this->side_right_two = NULL;
 }
 // Decalração dos Sets
 void Monster::setPos_x(int pos_x){
@@ -65,45 +65,61 @@ bool Monster::getMove_right(){
 void Monster::upload_images_red(){
 	this->side_up_one = al_load_bitmap("./images/monster/red/up_one.png");
 	this->side_up_two = al_load_bitmap("./images/monster/red/up_two.png");
+	this->side_up_tree = al_load_bitmap("./images/monster/red/up_tree.png");
 	this->side_down_one = al_load_bitmap("./images/monster/red/down_one.png");
 	this->side_down_two = al_load_bitmap("./images/monster/red/down_two.png");
+	this->side_down_tree = al_load_bitmap("./images/monster/red/down_tree.png");
 	this->side_left_one = al_load_bitmap("./images/monster/red/left_one.png");
 	this->side_left_two = al_load_bitmap("./images/monster/red/left_two.png");
-	this->side_rigth_one = al_load_bitmap("./images/monster/red/right_one.png");
-	this->side_rigth_two = al_load_bitmap("./images/monster/red/right_two.png");
+	this->side_left_tree = al_load_bitmap("./images/monster/red/left_tree.png");
+	this->side_right_one = al_load_bitmap("./images/monster/red/right_one.png");
+	this->side_right_two = al_load_bitmap("./images/monster/red/right_two.png");
+	this->side_right_tree = al_load_bitmap("./images/monster/red/right_tree.png");
 }
 void Monster::upload_images_pink(){
 	this->side_up_one = al_load_bitmap("./images/monster/pink/up_one.png");
 	this->side_up_two = al_load_bitmap("./images/monster/pink/up_two.png");
+	this->side_up_tree = al_load_bitmap("./images/monster/pink/up_tree.png");
 	this->side_down_one = al_load_bitmap("./images/monster/pink/down_one.png");
 	this->side_down_two = al_load_bitmap("./images/monster/pink/down_two.png");
+	this->side_down_tree = al_load_bitmap("./images/monster/pink/down_tree.png");
 	this->side_left_one = al_load_bitmap("./images/monster/pink/left_one.png");
 	this->side_left_two = al_load_bitmap("./images/monster/pink/left_two.png");
-	this->side_rigth_one = al_load_bitmap("./images/monster/pink/right_one.png");
-	this->side_rigth_two = al_load_bitmap("./images/monster/pink/right_two.png");
+	this->side_left_tree = al_load_bitmap("./images/monster/pink/left_tree.png");
+	this->side_right_one = al_load_bitmap("./images/monster/pink/right_one.png");
+	this->side_right_two = al_load_bitmap("./images/monster/pink/right_two.png");
+	this->side_right_tree = al_load_bitmap("./images/monster/pink/right_tree.png");
 }
 void Monster::upload_images_blue(){
 	this->side_up_one = al_load_bitmap("./images/monster/blue/up_one.png");
 	this->side_up_two = al_load_bitmap("./images/monster/blue/up_two.png");
+	this->side_up_tree = al_load_bitmap("./images/monster/blue/up_tree.png");
 	this->side_down_one = al_load_bitmap("./images/monster/blue/down_one.png");
 	this->side_down_two = al_load_bitmap("./images/monster/blue/down_two.png");
+	this->side_down_tree = al_load_bitmap("./images/monster/blue/down_tree.png");
 	this->side_left_one = al_load_bitmap("./images/monster/blue/left_one.png");
 	this->side_left_two = al_load_bitmap("./images/monster/blue/left_two.png");
-	this->side_rigth_one = al_load_bitmap("./images/monster/blue/right_one.png");
-	this->side_rigth_two = al_load_bitmap("./images/monster/blue/right_two.png");
+	this->side_left_tree = al_load_bitmap("./images/monster/blue/left_tree.png");
+	this->side_right_one = al_load_bitmap("./images/monster/blue/right_one.png");
+	this->side_right_two = al_load_bitmap("./images/monster/blue/right_two.png");
+	this->side_right_tree = al_load_bitmap("./images/monster/blue/right_tree.png");
 }
 void Monster::upload_images_yellow(){
 	this->side_up_one = al_load_bitmap("./images/monster/yellow/up_one.png");
 	this->side_up_two = al_load_bitmap("./images/monster/yellow/up_two.png");
+	this->side_up_tree = al_load_bitmap("./images/monster/yellow/up_tree.png");
 	this->side_down_one = al_load_bitmap("./images/monster/yellow/down_one.png");
 	this->side_down_two = al_load_bitmap("./images/monster/yellow/down_two.png");
+	this->side_down_tree = al_load_bitmap("./images/monster/yellow/down_tree.png");
 	this->side_left_one = al_load_bitmap("./images/monster/yellow/left_one.png");
 	this->side_left_two = al_load_bitmap("./images/monster/yellow/left_two.png");
-	this->side_rigth_one = al_load_bitmap("./images/monster/yellow/right_one.png");
-	this->side_rigth_two = al_load_bitmap("./images/monster/yellow/right_two.png");
+	this->side_left_tree = al_load_bitmap("./images/monster/yellow/left_tree.png");
+	this->side_right_one = al_load_bitmap("./images/monster/yellow/right_one.png");
+	this->side_right_two = al_load_bitmap("./images/monster/yellow/right_two.png");
+	this->side_right_tree = al_load_bitmap("./images/monster/yellow/right_tree.png");
 }
 // Funções de movimento
-void Monster::move(unsigned char game_map[441][234]){
+void Monster::move(unsigned char **game_map){
 	if(!(game_map[this->getPos_x()][this->getPos_y()-1] == 1 ||
 		game_map[this->getPos_x()+22][this->getPos_y()-1] == 1) &&
 		this->getMove_up()){
@@ -125,7 +141,7 @@ void Monster::move(unsigned char game_map[441][234]){
 	}
 }
 
-void Monster::sorteia_move(unsigned char game_map[441][234]){
+void Monster::sorteia_move(unsigned char **game_map){
 	int vetor[4] = {0,0,0,0};
 	if( game_map[this->getPos_x()][this->getPos_y()-1] == 1 ||
 		game_map[this->getPos_x()+22][this->getPos_y()-1] == 1){
@@ -239,26 +255,36 @@ void Monster::position(int pos_x, int pos_y){
 	this->pos_x = pos_x;
 	this->pos_y = pos_y;
 }
-void Monster::show_monster(bool monster_sprit_one){
-	if(monster_sprit_one){
+void Monster::show_monster(int monster_sprit){
+	if(monster_sprit == 1){
         if(this->getMove_up()){
-        	al_draw_bitmap(this->side_up_one, this->getPos_x(), this->getPos_y(), 0);
+        	al_draw_bitmap(this->side_up_one, this->getPos_x()-6, this->getPos_y()-6, 0);
         }else if(this->getMove_down()){
-        	al_draw_bitmap(this->side_down_one, this->getPos_x(), this->getPos_y(), 0);
+        	al_draw_bitmap(this->side_down_one, this->getPos_x()-6, this->getPos_y()-6, 0);
         }else if(this->getMove_left()){
-        	al_draw_bitmap(this->side_left_one, this->getPos_x(), this->getPos_y(), 0);
+        	al_draw_bitmap(this->side_left_one, this->getPos_x()-6, this->getPos_y()-6, 0);
         }else if(this->getMove_right()){
-        	al_draw_bitmap(this->side_rigth_one, this->getPos_x(), this->getPos_y(), 0);
+        	al_draw_bitmap(this->side_right_one, this->getPos_x()-6, this->getPos_y()-6, 0);
+        }
+    }else if(monster_sprit == 2 || monster_sprit == 4){
+    	if(this->getMove_up()){
+        	al_draw_bitmap(this->side_up_two, this->getPos_x()-6, this->getPos_y()-6, 0);
+        }else if(this->getMove_down()){
+        	al_draw_bitmap(this->side_down_two, this->getPos_x()-6, this->getPos_y()-6, 0);
+        }else if(this->getMove_left()){
+        	al_draw_bitmap(this->side_left_two, this->getPos_x()-6, this->getPos_y()-6, 0);
+        }else if(this->getMove_right()){
+        	al_draw_bitmap(this->side_right_two, this->getPos_x()-6, this->getPos_y()-6, 0);
         }
     }else{
     	if(this->getMove_up()){
-        	al_draw_bitmap(this->side_up_two, this->getPos_x(), this->getPos_y(), 0);
+        	al_draw_bitmap(this->side_up_tree, this->getPos_x()-6, this->getPos_y()-6, 0);
         }else if(this->getMove_down()){
-        	al_draw_bitmap(this->side_down_two, this->getPos_x(), this->getPos_y(), 0);
+        	al_draw_bitmap(this->side_down_tree, this->getPos_x()-6, this->getPos_y()-6, 0);
         }else if(this->getMove_left()){
-        	al_draw_bitmap(this->side_left_two, this->getPos_x(), this->getPos_y(), 0);
+        	al_draw_bitmap(this->side_left_tree, this->getPos_x()-6, this->getPos_y()-6, 0);
         }else if(this->getMove_right()){
-        	al_draw_bitmap(this->side_rigth_two, this->getPos_x(), this->getPos_y(), 0);
+        	al_draw_bitmap(this->side_right_tree, this->getPos_x()-6, this->getPos_y()-6, 0);
         }
     }
 }

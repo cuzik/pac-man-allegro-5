@@ -13,12 +13,16 @@ private:
 public:
 	ALLEGRO_BITMAP *side_up_one;
 	ALLEGRO_BITMAP *side_up_two;
+	ALLEGRO_BITMAP *side_up_tree;
 	ALLEGRO_BITMAP *side_down_one;
 	ALLEGRO_BITMAP *side_down_two;
+	ALLEGRO_BITMAP *side_down_tree;
 	ALLEGRO_BITMAP *side_left_one;
 	ALLEGRO_BITMAP *side_left_two;
-	ALLEGRO_BITMAP *side_rigth_one;
-	ALLEGRO_BITMAP *side_rigth_two;
+	ALLEGRO_BITMAP *side_left_tree;
+	ALLEGRO_BITMAP *side_right_one;
+	ALLEGRO_BITMAP *side_right_two;
+	ALLEGRO_BITMAP *side_right_tree;
 	Monster(int pos_x, int pos_y);
 	// Decalração dos Sets
 	void setPos_x(int pos_x);
@@ -42,8 +46,8 @@ public:
     void upload_images_blue();
     void upload_images_yellow();
     // Funções de movimento
-    void move(unsigned char game_map[441][234]);
-    void sorteia_move(unsigned char game_map[441][234]);
+    void move(unsigned char **game_map);
+    void sorteia_move(unsigned char **game_map);
     void walk_up();
 	void walk_down();
 	void walk_left();
@@ -52,5 +56,5 @@ public:
 	//colisão
 	bool collision(int pos_player_x, int pos_player_y);
 	//
-	void show_monster(bool monster_sprit_one);
+	void show_monster(int monster_sprit_one);
 };
