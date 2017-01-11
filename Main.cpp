@@ -51,14 +51,14 @@ int main(){
 	int res_monitor_x;
 	int res_monitor_y;
 	int dist_cap = 10;
-	int nivel = 2;
+	int nivel = 0;
 	bool isRunning = true;
 	bool game_win = false;
 	bool game_over = false;
 	bool pacman_die = false;
 	bool exit_game = false;
 	bool big_boll_white = false;
-	int boca_aberta = 0;
+	int estagio_sprite_player = 0;
 	float res_x;
 	float res_y;
 	int monster_sprit_one = 1;
@@ -72,50 +72,33 @@ int main(){
 	Player* player = new Player();
 
 	// Criando os Monstros
-	Monster* monster_red = new Monster(18,18);//(179, 110);
-	Monster* monster_pink = new Monster(18,18);//(202, 110);
-	Monster* monster_blue = new Monster(18,18);//(223, 110);
-	Monster* monster_yellow = new Monster(18,18);//(248, 110);
+	Monster* monster_01 = new Monster(18,18);//(179, 110);
+	Monster* monster_02 = new Monster(18,18);//(202, 110);
+	Monster* monster_03 = new Monster(18,18);//(223, 110);
+	Monster* monster_04 = new Monster(18,18);//(248, 110);
 
 	// Criando os objetos
+	ALLEGRO_BITMAP *grama_fundo = NULL;
 	ALLEGRO_BITMAP *background = NULL;
 	ALLEGRO_BITMAP *triangulado = NULL;
 	ALLEGRO_BITMAP *img_small_boll = NULL;
 	ALLEGRO_BITMAP *img_big_boll_white = NULL;
 	ALLEGRO_BITMAP *img_big_boll_yellow = NULL;
 
-	ALLEGRO_BITMAP *pac_man_die_stage_01 = NULL;
-	ALLEGRO_BITMAP *pac_man_die_stage_02 = NULL;
-	ALLEGRO_BITMAP *pac_man_die_stage_03 = NULL;
-	ALLEGRO_BITMAP *pac_man_die_stage_04 = NULL;
-	ALLEGRO_BITMAP *pac_man_die_stage_05 = NULL;
-	ALLEGRO_BITMAP *pac_man_die_stage_06 = NULL;
-	ALLEGRO_BITMAP *pac_man_die_stage_07 = NULL;
-	ALLEGRO_BITMAP *pac_man_die_stage_08 = NULL;
-	ALLEGRO_BITMAP *pac_man_die_stage_09 = NULL;
-	ALLEGRO_BITMAP *pac_man_die_stage_10 = NULL;
-	ALLEGRO_BITMAP *pac_man_die_stage_11 = NULL;
-
 	ALLEGRO_DISPLAY *display = NULL;
 	ALLEGRO_MONITOR_INFO info;
 	ALLEGRO_EVENT_QUEUE *queue_event = NULL;
 	ALLEGRO_FONT *font_message = NULL;
-	ALLEGRO_SAMPLE *pacman_trilha = NULL;
 	ALLEGRO_SAMPLE *pacman_beginning = NULL;
 	ALLEGRO_SAMPLE *pacman_chomp = NULL;
 	ALLEGRO_SAMPLE *pacman_death = NULL;
 	ALLEGRO_SAMPLE *pacman_eatfruit = NULL;
 	ALLEGRO_SAMPLE *pacman_eatghost = NULL;
-	ALLEGRO_SAMPLE *pacman_extrapac = NULL;
-	ALLEGRO_SAMPLE *pacman_intermission = NULL;
-	ALLEGRO_SAMPLE_INSTANCE *inst_pacman_trilha = NULL;
 	ALLEGRO_SAMPLE_INSTANCE *inst_pacman_beginning = NULL;
 	ALLEGRO_SAMPLE_INSTANCE *inst_pacman_chomp = NULL;
 	ALLEGRO_SAMPLE_INSTANCE *inst_pacman_death = NULL;
 	ALLEGRO_SAMPLE_INSTANCE *inst_pacman_eatfruit = NULL;
 	ALLEGRO_SAMPLE_INSTANCE *inst_pacman_eatghost = NULL;
-	ALLEGRO_SAMPLE_INSTANCE *inst_pacman_extrapac = NULL;
-	ALLEGRO_SAMPLE_INSTANCE *inst_pacman_intermission = NULL;
 	ALLEGRO_TRANSFORM redimencionamento;
 
 	// Iniciando o programa
@@ -158,6 +141,7 @@ int main(){
 	al_reserve_samples(10);
 
 	// Carregando as imagens do JOGO
+	grama_fundo = al_load_bitmap("./images/grama_fundo.png");
 	if(mapa_atual == 1){
 		background = al_load_bitmap("./images/background_01.png");
 		triangulado = al_load_bitmap("./images/mata_triangulado_01.png");
@@ -168,59 +152,36 @@ int main(){
 	img_small_boll = al_load_bitmap("./images/small_boll.png");
 	img_big_boll_white = al_load_bitmap("./images/big_boll_white.png");
 	img_big_boll_yellow = al_load_bitmap("./images/big_boll_yellow.png");
-	pac_man_die_stage_01 = al_load_bitmap("./images/player/die/pac_man_die_stage_01.png");
-	pac_man_die_stage_02 = al_load_bitmap("./images/player/die/pac_man_die_stage_02.png");
-	pac_man_die_stage_03 = al_load_bitmap("./images/player/die/pac_man_die_stage_03.png");
-	pac_man_die_stage_04 = al_load_bitmap("./images/player/die/pac_man_die_stage_04.png");
-	pac_man_die_stage_05 = al_load_bitmap("./images/player/die/pac_man_die_stage_05.png");
-	pac_man_die_stage_06 = al_load_bitmap("./images/player/die/pac_man_die_stage_06.png");
-	pac_man_die_stage_07 = al_load_bitmap("./images/player/die/pac_man_die_stage_07.png");
-	pac_man_die_stage_08 = al_load_bitmap("./images/player/die/pac_man_die_stage_08.png");
-	pac_man_die_stage_09 = al_load_bitmap("./images/player/die/pac_man_die_stage_09.png");
-	pac_man_die_stage_10 = al_load_bitmap("./images/player/die/pac_man_die_stage_10.png");
-	pac_man_die_stage_11 = al_load_bitmap("./images/player/die/pac_man_die_stage_11.png");
 
 	//Crregando os Sons do JOGO
-	pacman_trilha = al_load_sample("sounds/pacman_trilha.wav");
 	pacman_beginning = al_load_sample("sounds/pacman_beginning.wav");
 	pacman_chomp = al_load_sample("sounds/pacman_chomp.wav");
 	pacman_death = al_load_sample("sounds/pacman_death.wav");
 	pacman_eatfruit = al_load_sample("sounds/pacman_eatfruit.wav");
 	pacman_eatghost = al_load_sample("sounds/pacman_eatghost.wav");
-	pacman_extrapac = al_load_sample("sounds/pacman_extrapac.wav");
-	pacman_intermission = al_load_sample("sounds/pacman_intermission.wav");
 
-	inst_pacman_trilha = al_create_sample_instance(pacman_trilha);
 	inst_pacman_beginning = al_create_sample_instance(pacman_beginning);
 	inst_pacman_chomp = al_create_sample_instance(pacman_chomp);
 	inst_pacman_death = al_create_sample_instance(pacman_death);
 	inst_pacman_eatfruit = al_create_sample_instance(pacman_eatfruit);
 	inst_pacman_eatghost = al_create_sample_instance(pacman_eatghost);
-	inst_pacman_extrapac = al_create_sample_instance(pacman_extrapac);
-	inst_pacman_intermission = al_create_sample_instance(pacman_intermission);
 
-	al_attach_sample_instance_to_mixer(inst_pacman_trilha, al_get_default_mixer());
 	al_attach_sample_instance_to_mixer(inst_pacman_beginning, al_get_default_mixer());
 	al_attach_sample_instance_to_mixer(inst_pacman_chomp, al_get_default_mixer());
 	al_attach_sample_instance_to_mixer(inst_pacman_death, al_get_default_mixer());
 	al_attach_sample_instance_to_mixer(inst_pacman_eatfruit, al_get_default_mixer());
 	al_attach_sample_instance_to_mixer(inst_pacman_eatghost, al_get_default_mixer());
-	al_attach_sample_instance_to_mixer(inst_pacman_extrapac, al_get_default_mixer());
-	al_attach_sample_instance_to_mixer(inst_pacman_intermission, al_get_default_mixer());
-
-	//al_set_sample_instance_playmode(inst_pacman_trilha, ALLEGRO_PLAYMODE_LOOP);
-	//al_set_sample_instance_gain(inst_pacman_trilha, 0.5);
 
     //Carregando as imagens do personagem
     player->upload_images();
 
     // Carregando as imagens dos monstros
-    monster_red->upload_images_red();
-    monster_pink->upload_images_pink();
-    monster_blue->upload_images_blue();
-    monster_yellow->upload_images_yellow();
+    monster_01->upload_images_red();
+    monster_02->upload_images_pink();
+    monster_03->upload_images_blue();
+    monster_04->upload_images_yellow();
 
-    // Inicia a bolinhas
+    // Inicia a bolinhas e superbools
     Boll small_boll[num_bolls_small];
     Boll big_boll[num_bolls_big];
     int total_bolls;
@@ -320,6 +281,7 @@ int main(){
 	}
 	al_flip_display();
 	while(al_get_sample_instance_playing(inst_pacman_beginning)){
+		//só pra esperar pra musica carregar toda
 	}
 	while(!exit_game){
 		/***************************************************************
@@ -334,21 +296,25 @@ int main(){
 			//coloca o primeiro "Indivíduo" a ser testado no caso de teste
 
 
+
 		***************************************************************/
 		game_over = false;
+		player->setLifes(3);
+		player->setPoint(0);
+		nivel = 0;
 		while(!game_over){
 			//zera tudo para começa novo jogo
 			isRunning = true;
-			monster_red->position(18,18);
-			monster_pink->position(18,18);
-			monster_blue->position(18,18);
-			monster_yellow->position(18,18);
+			monster_01->position(18,18);
+			monster_02->position(18,18);
+			monster_03->position(18,18);
+			monster_04->position(18,18);
 			if(mapa_atual==1){
 				player->position(213,156);
 			}else if(mapa_atual==2){
 				player->position(306,386);
 			}
-			if(game_win){
+			if(game_win || nivel==0){
 				nivel++;
 				game_win = false;
 				bolls_pull = 0;
@@ -362,16 +328,17 @@ int main(){
 			}
 			pacman_die = false;
 			while(isRunning){
-			//al_play_sample_instance(inst_pacman_trilha);
-				ALLEGRO_EVENT event;
 				/***************************************************************
 
-				
+
+
 				//Trocar o evento do teclado para tocar a direção do player pela saida da rede neural
 				//Fazendo o "Indivíduo" escolher a ação que realizara
- 
+
+
 
 				***************************************************************/
+				ALLEGRO_EVENT event;
 				while(!al_is_event_queue_empty(queue_event)){
 		            al_wait_for_event(queue_event, &event);
 					if(event.type == ALLEGRO_EVENT_KEY_DOWN){
@@ -414,15 +381,15 @@ int main(){
 					}
 				}
 				//Lógica de movimento dos monstros
-				monster_red->move(game_map);
-				monster_pink->move(game_map);
-				monster_blue->move(game_map);
-				monster_yellow->move(game_map);
+				monster_01->move(game_map);
+				monster_02->move(game_map);
+				monster_03->move(game_map);
+				monster_04->move(game_map);
 
-				pacman_die = monster_red->collision(player->getPos_x(),player->getPos_y()) ||
-							monster_pink->collision(player->getPos_x(),player->getPos_y()) ||
-							monster_blue->collision(player->getPos_x(),player->getPos_y()) ||
-							monster_yellow->collision(player->getPos_x(),player->getPos_y());
+				pacman_die = monster_01->collision(player->getPos_x(),player->getPos_y()) ||
+							 monster_02->collision(player->getPos_x(),player->getPos_y()) ||
+							 monster_03->collision(player->getPos_x(),player->getPos_y()) ||
+							 monster_04->collision(player->getPos_x(),player->getPos_y());
 
 				//Lógica de movimento do Player
 				int aux = mov_atual;
@@ -433,17 +400,19 @@ int main(){
 				}
 
 				if(count == 5){
-		            boca_aberta++;
-		            if(boca_aberta == 5){
-		            	boca_aberta = 1;
+		            estagio_sprite_player++;
+		            if(estagio_sprite_player == 5){
+		            	estagio_sprite_player = 1;
 		            }
 		            count = 0;
 		        }else{
 		            count++;
 		        }
+		        //al_clear_to_color(al_map_rgb(0,0,0));
+		        al_draw_bitmap(grama_fundo, 0, 0, 0);
 		        al_draw_bitmap(background, 0, 0, 0);
 				// Coloca a imagem adequada do Player para dar a impressão de movimento
-				player->show(boca_aberta, mov_atual);
+				player->show(estagio_sprite_player, mov_atual);
 		        //Colocando as bolinhas
 		        if(count2 == 5){
 		            big_boll_white = !big_boll_white;
@@ -465,7 +434,6 @@ int main(){
 		        	if(small_boll[i].active){
 		        		al_draw_bitmap(img_small_boll, small_boll[i].pos_x-2, small_boll[i].pos_y-2, 0);
 		        	}
-
 		        }
 		        if(big_boll_white){
 			        for(i=0;i<num_bolls_big;i++){
@@ -504,19 +472,19 @@ int main(){
 		            count4++;
 		        }
 		        //Coloando os Monstros
-		        monster_red->show_monster(monster_sprit_one);
-		        monster_pink->show_monster(monster_sprit_one);
-		        monster_blue->show_monster(monster_sprit_one);
-		        monster_yellow->show_monster(monster_sprit_one);
+		        monster_01->show_monster(monster_sprit_one);
+		        monster_02->show_monster(monster_sprit_one);
+		        monster_03->show_monster(monster_sprit_one);
+		        monster_04->show_monster(monster_sprit_one);
 
 		        //Atualizando a pontuação e outros
 		        if(mapa_atual==1){
-			        al_draw_textf(font_message, al_map_rgb(255, 255, 0), 650, 46, 0, "Points: %lli", player->getPoint());
-			        al_draw_textf(font_message, al_map_rgb(255, 255, 0), 650, 70, 0, "Lifes : %i", player->getLifes());
-			        al_draw_textf(font_message, al_map_rgb(255, 255, 0), 650, 135, 0, "Ftns: %.4f", 0.0);
-			        al_draw_textf(font_message, al_map_rgb(255, 255, 0), 650, 159, 0, "Ger : %i", 0);
-			        al_draw_textf(font_message, al_map_rgb(255, 255, 0), 650, 183, 0, "Ind : %i", 0);
-			        al_draw_textf(font_message, al_map_rgb(255, 255, 0), 650, 207, 0, "nvl : %i", nivel);
+			        al_draw_textf(font_message, al_map_rgb(255, 255, 0), 467, 46, 0, "Points: %lli", player->getPoint());
+			        al_draw_textf(font_message, al_map_rgb(255, 255, 0), 467, 70, 0, "Lifes : %i", player->getLifes());
+			        al_draw_textf(font_message, al_map_rgb(255, 255, 0), 467, 135, 0, "Ftns: %.4f", 0.0);
+			        al_draw_textf(font_message, al_map_rgb(255, 255, 0), 467, 159, 0, "Ger : %i", 0);
+			        al_draw_textf(font_message, al_map_rgb(255, 255, 0), 467, 183, 0, "Ind : %i", 0);
+			        al_draw_textf(font_message, al_map_rgb(255, 255, 0), 467, 207, 0, "nvl : %i", nivel);
 			    }else if(mapa_atual==2){
 			        al_draw_textf(font_message, al_map_rgb(255, 255, 0), 650, 46, 0, "Points: %lli", player->getPoint());
 			        al_draw_textf(font_message, al_map_rgb(255, 255, 0), 650, 70, 0, "Lifes : %i", player->getLifes());
@@ -530,101 +498,6 @@ int main(){
 					player->setLifes(player->getLifes()+1);
 			    }
 		        if(pacman_die){
-		        	al_play_sample_instance(inst_pacman_death);
-		        	int asd; 
-		        	int time_load = 54000000;
-		        	asd = 0;
-		        	while(asd<time_load){
-		        		asd++;
-		        	}
-		        	al_draw_bitmap(background, 0, 0, 0);
-		        	al_draw_bitmap(pac_man_die_stage_01, player->getPos_x(), player->getPos_y(), 0);
-					al_draw_textf(font_message, al_map_rgb(255,255,0), 192, 114, 0, "GAME OVER");
-					al_flip_display();
-					asd = 0;
-		        	while(asd<time_load){
-		        		asd++;
-		        	}
-		        	al_draw_bitmap(background, 0, 0, 0);
-		        	al_draw_bitmap(pac_man_die_stage_02, player->getPos_x(), player->getPos_y(), 0);
-					al_draw_textf(font_message, al_map_rgb(255,255,0), 192, 114, 0, "GAME OVER");
-					al_flip_display();
-					asd = 0;
-		        	while(asd<time_load){
-		        		asd++;
-		        	}
-		        	al_draw_bitmap(background, 0, 0, 0);
-		        	al_draw_bitmap(pac_man_die_stage_03, player->getPos_x(), player->getPos_y(), 0);
-					al_draw_textf(font_message, al_map_rgb(255,255,0), 192, 114, 0, "GAME OVER");
-					al_flip_display();
-					asd = 0;
-		        	while(asd<time_load){
-		        		asd++;
-		        	}
-		        	al_draw_bitmap(background, 0, 0, 0);
-		        	al_draw_bitmap(pac_man_die_stage_04, player->getPos_x(), player->getPos_y(), 0);
-					al_draw_textf(font_message, al_map_rgb(255,255,0), 192, 114, 0, "GAME OVER");
-					al_flip_display();
-					asd = 0;
-		        	while(asd<time_load){
-		        		asd++;
-		        	}
-		        	al_draw_bitmap(background, 0, 0, 0);
-		        	al_draw_bitmap(pac_man_die_stage_05, player->getPos_x(), player->getPos_y(), 0);
-					al_draw_textf(font_message, al_map_rgb(255,255,0), 192, 114, 0, "GAME OVER");
-					al_flip_display();
-					asd = 0;
-		        	while(asd<time_load){
-		        		asd++;
-		        	}
-		        	al_draw_bitmap(background, 0, 0, 0);
-		        	al_draw_bitmap(pac_man_die_stage_06, player->getPos_x(), player->getPos_y(), 0);
-					al_draw_textf(font_message, al_map_rgb(255,255,0), 192, 114, 0, "GAME OVER");
-					al_flip_display();
-					asd = 0;
-		        	while(asd<time_load){
-		        		asd++;
-		        	}
-		        	al_draw_bitmap(background, 0, 0, 0);
-		        	al_draw_bitmap(pac_man_die_stage_07, player->getPos_x(), player->getPos_y(), 0);
-					al_draw_textf(font_message, al_map_rgb(255,255,0), 192, 114, 0, "GAME OVER");
-					al_flip_display();
-					asd = 0;
-		        	while(asd<time_load){
-		        		asd++;
-		        	}
-		        	al_draw_bitmap(background, 0, 0, 0);
-		        	al_draw_bitmap(pac_man_die_stage_08, player->getPos_x(), player->getPos_y(), 0);
-					al_draw_textf(font_message, al_map_rgb(255,255,0), 192, 114, 0, "GAME OVER");
-					al_flip_display();
-					asd = 0;
-		        	while(asd<time_load){
-		        		asd++;
-		        	}
-		        	al_draw_bitmap(background, 0, 0, 0);
-		        	al_draw_bitmap(pac_man_die_stage_09, player->getPos_x(), player->getPos_y(), 0);
-					al_draw_textf(font_message, al_map_rgb(255,255,0), 192, 114, 0, "GAME OVER");
-					al_flip_display();
-					asd = 0;
-		        	while(asd<time_load){
-		        		asd++;
-		        	}
-		        	al_draw_bitmap(background, 0, 0, 0);
-		        	al_draw_bitmap(pac_man_die_stage_10, player->getPos_x(), player->getPos_y(), 0);
-					al_draw_textf(font_message, al_map_rgb(255,255,0), 192, 114, 0, "GAME OVER");
-					al_flip_display();
-					asd = 0;
-		        	while(asd<time_load){
-		        		asd++;
-		        	}
-		        	al_draw_bitmap(background, 0, 0, 0);
-		        	al_draw_bitmap(pac_man_die_stage_11, player->getPos_x(), player->getPos_y(), 0);
-					al_draw_textf(font_message, al_map_rgb(255,255,0), 192, 114, 0, "GAME OVER");
-					al_flip_display();
-					asd = 0;
-		        	while(asd<time_load){
-		        		asd++;
-		        	}
 					isRunning = false;
 					player->setLifes(player->getLifes()-1);
 		        }
@@ -635,15 +508,17 @@ int main(){
 		            count3++;
 		        }
 			}
-			if(!game_over){
-				game_over = player->getLifes()==0;
+			if(player->getLifes() == 0){
+				game_over = true;
 			}
 		}
 		/***************************************************************
 
+
 		
 			//testa se o "Indivíduo" atingio a meta estipulada de fitness ou outra ondição de parada de "Evolução"
 			//se sim exit_game = true; 
+
 
 
 		***************************************************************/
